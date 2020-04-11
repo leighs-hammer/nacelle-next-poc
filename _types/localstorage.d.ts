@@ -1,0 +1,1 @@
+export type TLocalStorageHelpers = (key: string, value: string) => false | string
