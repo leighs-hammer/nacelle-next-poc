@@ -3,19 +3,22 @@ import fs from 'fs'
 import path from 'path'
 import Stage from '../../components/Stage'
 import fetch from 'isomorphic-unfetch'
-import { GET_ALL_COLLECTIONS } from '../../_gql/getAllCollectionsDataAtBuild'
 import BUILD_FILES from '../../_constants/buildFilePaths';
+import GET_ALL_COLLECTIONS from '../../_gql/getAllCollectionsDataAtBuild';
 
 export interface ProductProps {
-  product: any // lazy but until fleshed out I will need to define this later.
+  collection: any // lazy but until fleshed out I will need to define this later.
 }
  
-const Product: React.SFC<ProductProps> = ({product}) => {
+const Product: React.SFC<ProductProps> = ({collection}) => {
 
   return ( 
-    <Stage title={product && product.title? product.title : 'NOT FOUND'} navigation={{}}>
+    <Stage title={collection && collection.title? collection.title : 'NOT FOUND'} navigation={{}}>
       <div className='Product'>
-        {JSON.stringify(product)}
+        <div>
+          <h1>{collection && collection.title}</h1>
+        </div>
+        {JSON.stringify(collection)}
       </div>
     </Stage>
   )
@@ -25,14 +28,13 @@ const Product: React.SFC<ProductProps> = ({product}) => {
 // POC
 export const getStaticPaths = async () => {
 
-
   const body = {
     query: GET_ALL_COLLECTIONS
   }
 
   // @todo move to util
   const all = await (await fetch(process.env.NACELLE_ENDPOINT, {
-
+    
     method: 'POST',
     headers: {
       'x-nacelle-space-id': process.env.NACELLE_ID,
@@ -42,10 +44,10 @@ export const getStaticPaths = async () => {
   })).json()
 
   // Array of params for get Static Props
-  const paths = all.data.getProducts.items.map((item) => ({ params: {handle: item.handle}}))
+  const paths = all.data.getCollections.items.map((item) => ({ params: {handle: item.handle}}))
   
   // lets write a local file on build so we dont have to request stuff 300 times.
-  fs.writeFileSync(path.resolve(BUILD_FILES.COLLECTIONS), JSON.stringify({ items : all.data.getProducts.items}))
+  fs.writeFileSync(path.resolve(BUILD_FILES.COLLECTIONS), JSON.stringify({ items : all.data.getCollections.items}))
 
   return {
     paths,
@@ -58,12 +60,12 @@ export const getStaticProps = async ({params}) => {
 
   const {handle} = params
   const buildFile = JSON.parse(fs.readFileSync(path.resolve(BUILD_FILES.COLLECTIONS), 'utf8'))
-  const product = buildFile.items.find(item => item.handle === handle)
+  const collection = buildFile.items.find(item => item.handle === handle)
 
   return {
     props: {
-      productLoadedStatic: !product,
-      product,
+      productLoadedStatic: !collection,
+      collection,
     }
   }
 }

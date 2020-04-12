@@ -32,7 +32,7 @@ export const NacelleProvider: React.FC<any> = ({children}) =>{
       const settingsResponse = await ( await fetch('/api/abscratednacelleconfig', {method: 'POST'})).json()
       if(settingsResponse) {
         
-        const settings: IFNacelleClientSettings = JSON.parse(atob(settingsResponse.payload))
+        const settings: IFNacelleClientSettings = settingsResponse.payload
         setClientSettings(settings)
         setClientAvailable(true)
         setFirst(false)
@@ -56,7 +56,6 @@ export const NacelleProvider: React.FC<any> = ({children}) =>{
     clientAvailable,
 
   }
-
 
   return (
       <NacelleContext.Provider value={context}>

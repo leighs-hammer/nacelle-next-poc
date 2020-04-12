@@ -53,6 +53,7 @@ export const getStaticPaths = async () => {
 
 // Static Request
 export const getStaticProps = async ({params}) => {
+
   const {handle} = params
   const buildFile = JSON.parse(fs.readFileSync(path.resolve(BUILD_FILES.PRODUCTS), 'utf8'))
   const product = buildFile.items.find(item => item.handle === handle)

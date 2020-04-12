@@ -1,5 +1,21 @@
 {
   "version": 2,
+  "env": {
+    "NACELLE_ID": "@nacelle_id_poc",
+    "NACELLE_TOKEN": "@nacelle_token_poc",
+    "LOCALE": "@nacelle_locale_poc",
+    "NACELLE_ENDPOINT":"@nacelle_endpoint_poc",
+    "APP_URL": "@nacell_app_url_poc"
+  },
+  "build" : {
+    "env": {
+      "NACELLE_ID": "@nacelle_id_poc",
+      "NACELLE_TOKEN": "@nacelle_token_poc",
+      "LOCALE": "@nacelle_locale_poc",
+      "NACELLE_ENDPOINT":"@nacelle_endpoint_poc",
+      "APP_URL": "@nacell_app_url_poc"
+    }
+  },
   "routes": [	
     {	
       "src": "^/service-worker.js$",	

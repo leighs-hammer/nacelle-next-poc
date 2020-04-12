@@ -14,7 +14,8 @@ const getNacelleConfig = async (req: NextApiRequest, res: NextApiResponse) => {
   }
   
   // nothing secure about this its just base 64ed for now a signing key would be better
-  return res.status(200).json({payload: btoa(JSON.stringify(nacelleClientSettings))})
+  return res.status(200).json({payload: nacelleClientSettings})
 }
 
 export default verifiedConnection(getNacelleConfig)
+// export default getNacelleConfig

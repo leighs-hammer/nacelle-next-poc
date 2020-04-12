@@ -8,11 +8,11 @@ const verifiedConnection: TverificationMiddleware = (handler: Thandler) => {
 
     if(process.env.NODE_ENV === 'production') {
       
-      const host = req.headers['x-forwarded-host']
-      const cleanBaseOrigin = process.env.APP_URL.replace('https://', '')
- 
+      console.log(req.headers)
+      // const cleanBaseOrigin = process.env.APP_URL.replace('https://', '')
+
       // early respond for malicious & wrong methods of requests
-      if(req.method !== 'POST' || host !== cleanBaseOrigin) {
+      if(req.method !== 'POST') {
         return res.status(429).json({error: true, message: 'Method not allowed or security check failed'})
       }
     }
