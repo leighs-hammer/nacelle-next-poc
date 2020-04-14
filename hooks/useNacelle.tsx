@@ -28,20 +28,23 @@ export const NacelleProvider: React.FC<any> = ({children}) =>{
   const client = clientAvailable ? createClient(clientSettings) : false
   
   const getClientSettings = async () => {
+   
     try {
+      
       const settingsResponse = await ( await fetch('/api/abscratednacelleconfig', {method: 'POST'})).json()
-      if(settingsResponse) {
-        
+
+      if(settingsResponse) {  
         const settings: IFNacelleClientSettings = settingsResponse.payload
         setClientSettings(settings)
         setClientAvailable(true)
         setFirst(false)
-      
       }
+
     } catch (error) {
       console.error(error.message)
       setFirst(true) // stop it going circular
     }
+    
   }
 
   // Helper methods and extractions go here. 

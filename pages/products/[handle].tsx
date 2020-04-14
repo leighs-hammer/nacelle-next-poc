@@ -1,10 +1,15 @@
 import React from 'react'
+import { useRouter } from 'next/router'
 import fs from 'fs'
 import path from 'path'
 import GET_ALL_PRODUCTS from '../../_gql/getAllProductDataAtBuild';
 import Stage from '../../components/Stage'
 import fetch from 'isomorphic-unfetch'
 import BUILD_FILES from '../../_constants/buildFilePaths';
+import ProductGallery from '../../components/Product/ProductGallery';
+import { THEME_CONTAINER_WIDTH } from '../../_constants/theme';
+import ProductForm from '../../components/Product/ProductForm';
+import ProductTitle from '../../components/Product/ProductTitle';
 
 export interface ProductProps {
   product: any // lazy but until fleshed out I will need to define this later.
@@ -12,10 +17,38 @@ export interface ProductProps {
  
 const Product: React.SFC<ProductProps> = ({product}) => {
 
+  const router = useRouter()
+  
+  if (router.isFallback) {
+    return <div>Loading...</div>
+  }
+
   return ( 
     <Stage title={product && product.title? product.title : 'NOT FOUND'} navigation={{}}>
       <div className='Product'>
-        {JSON.stringify(product)}
+        <div className="container">
+          <ProductGallery image={product.featuredMedia} media={product.media} />
+          
+          <div className="ProductInfo">
+            <ProductTitle title={product.title} />
+            <ProductForm />
+            <pre>{JSON.stringify(product, null, 2)}</pre>
+          </div>
+
+        </div>
+        <style jsx>{`
+          .Product {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+          }
+          .container {
+            display: flex;
+            max-width: ${THEME_CONTAINER_WIDTH};
+          }
+        `}</style>
       </div>
     </Stage>
   )

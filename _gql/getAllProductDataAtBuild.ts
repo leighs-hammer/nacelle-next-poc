@@ -8,11 +8,13 @@ const GET_ALL_PRODUCTS = `
       description
       globalHandle
       featuredMedia {
+        id
         type
         src
         altText
       }
       media {
+        id
         type
         src
         altText
@@ -29,6 +31,12 @@ const GET_ALL_PRODUCTS = `
         selectedOptions {
           name
           value
+        }
+        featuredMedia {
+          id
+          type
+          src
+          altText
         }
         sku
         availableForSale
