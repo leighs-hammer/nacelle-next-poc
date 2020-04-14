@@ -1,5 +1,4 @@
 import React from 'react'
-import Head from 'next/head'
 import Stage from '../components/Stage'
 import fs from 'fs'
 import path from 'path';

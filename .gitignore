@@ -25,3 +25,12 @@ yarn-debug.log*
 yarn-error.log*
 
 .now
+
+# Remove Build Files
+# allCollectionData.json
+# allCollectionPaths.json
+# allProductData.json
+# allProductPaths.json
+# highWarp.json
+
+/public/buildData/*.json

@@ -10,6 +10,7 @@ import ProductGallery from '../../components/Product/ProductGallery';
 import { THEME_CONTAINER_WIDTH } from '../../_constants/theme';
 import ProductForm from '../../components/Product/ProductForm';
 import ProductTitle from '../../components/Product/ProductTitle';
+import nacelleHighWarpLoader from '../../_nacelle/nacelleHighWarpLoader';
 
 export interface ProductProps {
   product: any // lazy but until fleshed out I will need to define this later.
@@ -19,7 +20,7 @@ const Product: React.SFC<ProductProps> = ({product}) => {
 
   const router = useRouter()
   
-  if (router.isFallback) {
+  if (router.isFallback || !product) {
     return <div>Loading...</div>
   }
 
@@ -55,31 +56,12 @@ const Product: React.SFC<ProductProps> = ({product}) => {
 }
 
 
-// POC
 export const getStaticPaths = async () => {
-
-  const body = {
-    query: GET_ALL_PRODUCTS
-  }
-
-  // @todo move to util
-  const all = await (await fetch(process.env.NACELLE_ENDPOINT, {
-    method: 'POST',
-    headers: {
-      'x-nacelle-space-id': process.env.NACELLE_ID,
-      'x-nacelle-space-token': process.env.NACELLE_TOKEN,
-    },
-    body: JSON.stringify(body)
-  })).json()
-
-  // Array of params for get Static Props
-  const paths = all.data.getProducts.items.map((item) => ({ params: {handle: item.handle}}))
   
-  // lets write a local file on build so we dont have to request stuff 300 times.
-  fs.writeFileSync(path.resolve(BUILD_FILES.PRODUCTS), JSON.stringify({ items : all.data.getProducts.items}))
+  const {productPaths} = await nacelleHighWarpLoader('productPaths')
 
   return {
-    paths: paths,
+    paths: productPaths,
     fallback: true,
   }
 }
@@ -88,8 +70,11 @@ export const getStaticPaths = async () => {
 export const getStaticProps = async ({params}) => {
 
   const {handle} = params
-  const buildFile = JSON.parse(fs.readFileSync(path.resolve(BUILD_FILES.PRODUCTS), 'utf8'))
-  const product = buildFile.items.find(item => item.handle === handle)
+  
+  // local static file
+  //  kept singlular for the POC
+  const productFile = await nacelleHighWarpLoader('products')
+  const product = productFile.items.find(item => item.handle === handle)
 
   return {
     props: {
